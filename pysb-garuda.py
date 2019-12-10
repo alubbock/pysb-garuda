@@ -6,6 +6,8 @@ from pysb.simulator.bng import BngSimulator
 from pysb.importers.sbml import model_from_sbml, model_from_biomodels
 from pysb.importers.json import model_from_json
 import numpy as np
+from pysb.logging import setup_logger
+import logging
 
 # Set up the argparser
 SIMULATOR_CHOICES = ('ScipyOdeSimulator', 'StochKitSimulator', 'BngSimulator',
@@ -39,11 +41,18 @@ parser.add_argument('--tmax',
 parser.add_argument('--method',
                     type=str,
                     choices=BNG_SIM_TYPES,
-                    required=False)
-parser.add_argument('--nruns', type=int, default=1)
+                    required=False,
+                    help='Simulation method (BngSimulator only)')
+parser.add_argument('--nruns', type=int, default=1,
+                    help='Number of simulation runs')
+parser.add_argument('--verbose', action='store_true',
+                    help='Show debugging information')
 
 # Parse arguments and validate
 args = parser.parse_args()
+
+if args.verbose:
+    setup_logger(level=logging.DEBUG)
 
 
 def _exit(message, exit_code=2):
